@@ -29,5 +29,7 @@ def main():
             conn, addr = s.accept()
             with conn:
                 print("accepting connection from ", addr)
-                new_pixels = recv_full_object(sock)
+                new_pixels = recv_full_object(conn)
                 update_pixels(new_pixels)
+
+main()
