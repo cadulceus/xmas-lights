@@ -7,9 +7,9 @@ PIXELS_COUNT = 500
 pixels = neopixel.NeoPixel(board.D21, PIXELS_COUNT, auto_write = False, pixel_order = 'RGB')
 
 def recv_full_object(sock):
-    pickled_arr = ""
+    pickled_arr = b''
     for i in range(5):
-        pickled_arr += conn.recv(4096)
+        pickled_arr += sock.recv(4096)
         try:
             return loads(pickled_arr)
         except:
@@ -17,7 +17,8 @@ def recv_full_object(sock):
     print("Giving up after 5 attempts")
 
 def update_pixels(new_pixels):
-    for i in range(max(len(pixels), len(new_pixels))):
+    print("updating pixels")
+    for i in range(min(len(pixels), len(new_pixels))):
         pixels[i] = new_pixels[i]
     pixels.show()
 
