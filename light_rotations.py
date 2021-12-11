@@ -1,13 +1,15 @@
-import time, socket
+import time, socket, sys
 from pickle import dumps
 
 PIXELS_COUNT = 250
 INIT_COLOR_SCALE = 5
 STEP_COLOR_SCALE = 15
-HOST = '10.10.10.141'
 PORT = 4141
 
-pixels = []
+if len(sys.argv) != 2:
+    print("USAGE: python light_rotations.py <host ip>")
+    sys.exit(0)
+HOST = sys.argv[1]
 
 # assumes that at least one color is 0 and r + g + b <= 255
 def rotate_color(grb, count=1, scale=STEP_COLOR_SCALE):
@@ -23,26 +25,21 @@ def rotate_color(grb, count=1, scale=STEP_COLOR_SCALE):
         return rotated_grb
 
 def init_pixels():
-    print("initializing colors")
     pixels = [[255,0,0]]*PIXELS_COUNT
     for i, p in enumerate(pixels):
         pixels[i] = rotate_color(p, i, INIT_COLOR_SCALE)
-    print(pixels)
     return pixels
 
 def main():
     pixels = init_pixels()
     while 1:
         # rotate each pixel by STEP_COLOR_SCALE
-        print("rotating colors")
         for p_ind, p in enumerate(pixels):
             pixels[p_ind] = rotate_color(p)
-        print(pixels, "\n\n")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            print(len(dumps(pixels)))
             s.connect((HOST, PORT))
             s.send(dumps(pixels))
             s.close()
-        time.sleep(1)#0.01)
+        time.sleep(0.03)
 
 main()

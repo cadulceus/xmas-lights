@@ -13,11 +13,9 @@ def recv_full_object(sock):
         try:
             return loads(pickled_arr)
         except:
-            print("Couldn't unpickle array")
-    print("Giving up after 5 attempts")
+            pass
 
 def update_pixels(new_pixels):
-    print("updating pixels")
     for i in range(min(len(pixels), len(new_pixels))):
         pixels[i] = new_pixels[i]
     pixels.show()
@@ -29,7 +27,6 @@ def main():
             s.listen()
             conn, addr = s.accept()
             with conn:
-                print("accepting connection from ", addr)
                 new_pixels = recv_full_object(conn)
                 update_pixels(new_pixels)
 
