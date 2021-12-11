@@ -1,11 +1,13 @@
-import neopixel, board, time
+import time, socket
+from pickle import dumps
 
 PIXELS_COUNT = 250
 INIT_COLOR_SCALE = 5
 STEP_COLOR_SCALE = 15
+HOST = '10.10.10.141'
+PORT = 4141
 
-pixels = neopixel.NeoPixel(board.D21, PIXELS_COUNT)
-pixels.auto_write = False
+pixels = []
 
 # assumes that at least one color is 0 and r + g + b <= 255
 def rotate_color(grb, count=1, scale=STEP_COLOR_SCALE):
@@ -20,18 +22,27 @@ def rotate_color(grb, count=1, scale=STEP_COLOR_SCALE):
             rotated_grb[(i + 1) % 3] = min(255, rotated_grb[(i + 1) % 3] + scale)
         return rotated_grb
 
-pixels.fill((255,0,0))
-print("initializing colors")
-for i, p in enumerate(pixels):
-    pixels[i] = rotate_color(p, i, INIT_COLOR_SCALE)
-print(pixels)
-pixels.show()
+def init_pixels():
+    print("initializing colors")
+    pixels = [[255,0,0]]*PIXELS_COUNT
+    for i, p in enumerate(pixels):
+        pixels[i] = rotate_color(p, i, INIT_COLOR_SCALE)
+    print(pixels)
+    return pixels
 
-# rotate each pixel by STEP_COLOR_SCALE
-print("rotating colors")
-while 1:
-    for p_ind, p in enumerate(pixels):
-        pixels[p_ind] = rotate_color(p)
-    print(pixels, "\n\n")
-    time.sleep(0.01)
-    pixels.show()
+def main():
+    pixels = init_pixels()
+    while 1:
+        # rotate each pixel by STEP_COLOR_SCALE
+        print("rotating colors")
+        for p_ind, p in enumerate(pixels):
+            pixels[p_ind] = rotate_color(p)
+        print(pixels, "\n\n")
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            print(len(dumps(pixels)))
+            s.connect((HOST, PORT))
+            s.send(dumps(pixels))
+            s.close()
+        time.sleep(1)#0.01)
+
+main()
