@@ -14,21 +14,22 @@ def take_picture(cam):
 def find_brightest(gs_img):
         # locates the brightest and darkest pixel in the image
         (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(gs_img)
-        cv2.circle(gs_img, maxLoc, 4, 0, 3)
-        cv2.imshow("visualize-led", gs_img)
+        render = gs_img.copy()
+        cv2.circle(render, maxLoc, 10, 255, 3)
+        cv2.imshow("visualize-led", render)
 
         circle_mask = np.zeros((gs_img.shape[0], gs_img.shape[1]), np.uint8)
         cv2.circle(circle_mask, maxLoc, 4, 255, -1) # 6 is radius, 255 is color, -1 is thickness
         magnitude = cv2.mean(gs_img, mask = circle_mask)[0]
         print("maxLoc: ", maxLoc, "magnitude: ", magnitude)
-        if magnitude < 20: # arbitrary threshold of deciding if pixel is a false positive
-            return [-1, -1], 0
+        # if magnitude < 100: # arbitrary threshold of deciding if pixel is a false positive
+        #     return [-1, -1], 0
 
         return maxLoc, magnitude
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: tree-mapper.py <tree ip> <output file>")
+        print("Usage: python tree-mapper.py <tree ip> <output file>")
         return
     fname = sys.argv[2]
     host_ip = sys.argv[1]
@@ -39,7 +40,7 @@ def main():
     xmas_tree = tree.tree(host_ip, 4141)
 
     readings = []
-    pixels = [[0,0,0]] * 350
+    pixels = [[0,0,0]] * 400
     for i in range(len(pixels)):
         pixels[i - 1] = [0, 0, 0]
         pixels[i] = [255, 255, 255]
@@ -48,7 +49,7 @@ def main():
         gs = take_picture(cam)
         brightest_loc, magnitude = find_brightest(gs)
         readings.append([brightest_loc[0], brightest_loc[1], magnitude])
-        cv2.waitKey(1) # yes this is 1 millisecond, it doesn't really matter
+        cv2.waitKey(50)
 
     with open(fname, "w") as f:
         f.write("\n".join([", ".join([str(val) for val in reading]) for reading in readings]))
