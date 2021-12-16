@@ -86,7 +86,8 @@ class tree:
 
     def rotate(self, point, pitch = 0, roll = 0, yaw = 0, origin = [0, 0, 0]):
         """
-        Rotate point around origin given pitch, roll, and/or yaw in radians
+        Rotate point around origin given pitch, roll, and/or yaw in radians.
+        Also supports rotation of an entire numpy ndarray.
         """
         if np.nan in point:
             return point
@@ -112,6 +113,19 @@ class tree:
         Azy = cosb*sinc
         Azz = cosb*cosc
 
+        # support rotating entire numpy arrays too
+        if isinstance(point, np.ndarray):
+            # Don't modify the original
+            new_array = point.copy()
+            new_array -= origin
+            new_array[:, 0] =  Axx*new_array[:, 0] +  Axy*new_array[:, 1] + Axz*new_array[:, 2]
+            new_array[:, 1] =  Ayx*new_array[:, 0] +  Ayy*new_array[:, 1] + Ayz*new_array[:, 2]
+            new_array[:, 2] =  Azx*new_array[:, 0] +  Azy*new_array[:, 1] + Azz*new_array[:, 2]
+            new_array += origin
+            return new_array 
+
+        # If we reach this point, assume we've got a normal set of coordinates
+
         px = point[0] - origin[0]
         py = point[1] - origin[1]
         pz = point[2] - origin[2]
@@ -119,7 +133,7 @@ class tree:
         new_x = Axx*px + Axy*py + Axz*pz
         new_y = Ayx*px + Ayy*py + Ayz*pz
         new_z = Azx*px + Azy*py + Azz*pz
-        return [round(new_x + origin[0], 4), round(new_y + origin[1], 4), round(new_z +  + origin[2], 4)]
+        return [new_x + origin[0], new_y + origin[1], new_z +  + origin[2]]
 
     def merge_arrays(self, dest, source):
         """
@@ -168,5 +182,4 @@ class tree:
 
         averages = self.merge_arrays(final_arr, np_deg90) + self.merge_arrays(final_arr, np_deg180) + self.merge_arrays(final_arr, np_deg270) + 1
         final_arr = final_arr / averages
-        print(final_arr)
         self.pixel_coords = final_arr

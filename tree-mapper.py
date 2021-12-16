@@ -28,10 +28,11 @@ def find_brightest(gs_img):
         return maxLoc, magnitude
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python tree-mapper.py <tree ip> <output file>")
+    if len(sys.argv) != 4:
+        print("Usage: python tree-mapper.py <tree ip> <light count> <output file>")
         return
-    fname = sys.argv[2]
+    fname = sys.argv[3]
+    num_lights = sys.argv[2]
     host_ip = sys.argv[1]
     
     cam = cv2.VideoCapture(0)
@@ -40,7 +41,7 @@ def main():
     xmas_tree = tree.tree(host_ip, 4141)
 
     readings = []
-    pixels = [[0,0,0]] * 400
+    pixels = [[0,0,0]] * num_lights
     for i in range(len(pixels)):
         pixels[i - 1] = [0, 0, 0]
         pixels[i] = [255, 255, 255]

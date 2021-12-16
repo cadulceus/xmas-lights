@@ -9,23 +9,52 @@ else:
     print("USAGE: python light_rotations.py <optional destination ip>")
     sys.exit(0)
 
-if __name__ == "__main__":
-    test_tree = tree.tree(host = HOST)
-    test_tree.load_mappings()
-
-    pixels_to_write = np.array([[0,0,0]] * 400)
+def scroll_sequence(tree, iterations = 3, axis = 0, c1 = [255, 0, 0], c2 = [0, 255, 0]):
     split = 50
-    c1 = [255, 0, 0]
-    c2 = [0, 255, 0]
-    while 1:
+    pixels_to_write = np.array([[0,0,0]] * len(tree.pixel_coords))
+    i = 0
+    while i < iterations:
         split += 5
+        if split == 50:
+            i += 1
+
         if split >= 120:
             c1, c2 = c2, c1
-            print("left: ", c1, "right: ", c2)
             split = 0
-        green_mask = test_tree.pixel_coords[:, 0] < split
-        red_mask = test_tree.pixel_coords[:, 0] > split
+
+        green_mask = tree.pixel_coords[:, axis] < split
+        red_mask = tree.pixel_coords[:, axis] > split
         pixels_to_write[red_mask] = c1
         pixels_to_write[green_mask] = c2
-        test_tree.write_pixels([list([int(c) for c in pixel]) for pixel in pixels_to_write])
+        tree.write_pixels([list([int(c) for c in pixel]) for pixel in pixels_to_write])
         time.sleep(0.05)
+
+def rotate_sequence(tree, iterations = 3, axis = 0, c1 = [255, 0, 0], c2 = [0, 255, 0]):
+    split = 50
+    angle = 0
+    pixels_to_write = np.array([[0,0,0]] * len(tree.pixel_coords))
+    i = 0
+    while i < iterations:
+        angle += .05
+        if round(angle, 2) % 2 == 0:
+            i += 1
+
+        rotated_tree = tree.rotate(tree.pixel_coords, pitch = angle*np.pi, origin = tree.midpoint)
+        green_mask = rotated_tree[:, axis] < split
+        red_mask = rotated_tree[:, axis] > split
+        pixels_to_write[red_mask] = c1
+        pixels_to_write[green_mask] = c2
+        tree.write_pixels([list([int(c) for c in pixel]) for pixel in pixels_to_write])
+        time.sleep(0.05)
+
+
+if __name__ == "__main__":
+    xmas_tree = tree.tree(host = HOST)
+    xmas_tree.load_mappings()
+    np.set_printoptions(threshold=sys.maxsize)
+    print(xmas_tree.pixel_coords)
+    time.sleep(0.5)
+
+    while 1:
+        rotate_sequence(xmas_tree, axis = 1)
+        scroll_sequence(xmas_tree)
