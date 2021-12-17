@@ -6,7 +6,6 @@ if len(sys.argv) == 2:
 elif len(sys.argv) == 1:
     HOST = '127.0.0.1'
 else:
-    print("USAGE: python light_rotations.py <optional destination ip>")
     sys.exit(0)
 
 def scroll_sequence(tree, iterations = 3, axis = 0, c1 = [255, 0, 0], c2 = [0, 255, 0]):
@@ -21,7 +20,6 @@ def scroll_sequence(tree, iterations = 3, axis = 0, c1 = [255, 0, 0], c2 = [0, 2
         if split >= 120:
             c1, c2 = c2, c1
             split = 0
-
         green_mask = tree.pixel_coords[:, axis] < split
         red_mask = tree.pixel_coords[:, axis] > split
         pixels_to_write[red_mask] = c1
@@ -52,9 +50,10 @@ if __name__ == "__main__":
     xmas_tree = tree.tree(host = HOST)
     xmas_tree.load_mappings()
     np.set_printoptions(threshold=sys.maxsize)
-    print(xmas_tree.pixel_coords)
     time.sleep(0.5)
 
     while 1:
-        rotate_sequence(xmas_tree, axis = 1)
-        scroll_sequence(xmas_tree)
+        # rotate_sequence(xmas_tree)
+        scroll_sequence(xmas_tree, axis = 0)
+        scroll_sequence(xmas_tree, axis = 1)
+        scroll_sequence(xmas_tree, axis = 2)

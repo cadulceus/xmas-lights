@@ -55,6 +55,14 @@ class tree:
             np_readings[np_readings == -1] = np.nan
             return np_readings
 
+    def find_nearest(self, point):
+        """
+        returns the index of the nearest pixel in 3d space to a given point
+        """
+        idx = np.abs(self.pixel_coords - point)
+        distances = [find_distance(point, tree_point) for pixel in self.pixel_coords]
+        return distances.index(min(distances))
+
     def yaw_90_deg(self, arr, times = 1, origin = [0, 0, 0]):
         """
         use some cheap tricks to rotate a 3d array along the y axis while still preserving
@@ -88,6 +96,7 @@ class tree:
         """
         Rotate point around origin given pitch, roll, and/or yaw in radians.
         Also supports rotation of an entire numpy ndarray.
+        Note that the top of the tree is treated as the 'front' with regards to the rotational axis
         """
         if np.nan in point:
             return point

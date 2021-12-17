@@ -20,7 +20,7 @@ def normalize_arr(arr, bound, invert = False):
                 curr_arr[i] = abs(curr_arr[i] - max_x)
             curr_arr[i] = curr_arr[i] * x_scale
 
-def parse_readings(readings, min_magnitude = 120):
+def parse_readings(readings, min_magnitude):
         readings = readings.split("\n")
         readings = [s.split(", ") for s in readings]
         for i, reading in enumerate(readings):
@@ -61,7 +61,7 @@ def merge_arrays(dest, source):
     
     return both_known.astype(int)
 
-def load_mappings(f1, f2, f3, f4):
+def load_mappings(f1, f2, f3, f4, magnitude_filter = 100):
     """
     Load in 4 mapping files that contain x, y, and magnitude CSVs that tree-mapper.py outputs.
     Each file is expected to be a 90 degree increment counter-clockwise rotation from the 'front'.
@@ -69,13 +69,13 @@ def load_mappings(f1, f2, f3, f4):
     coordinates, where the index of a given point corresponds with the position of the LED in the strip.
     """
     with open("readings_0_deg.txt", "r") as f:
-        np_deg0 = parse_readings(f.read())
+        np_deg0 = parse_readings(f.read(), magnitude_filter)
     with open("readings_90_deg.txt", "r") as f:
-        np_deg90 = parse_readings(f.read())
+        np_deg90 = parse_readings(f.read(), magnitude_filter)
     with open("readings_180_deg.txt", "r") as f:
-        np_deg180 = parse_readings(f.read())
+        np_deg180 = parse_readings(f.read(), magnitude_filter)
     with open("readings_270_deg.txt", "r") as f:
-        np_deg270 = parse_readings(f.read())
+        np_deg270 = parse_readings(f.read(), magnitude_filter)
 
     x_size, y_size, z_size = 100, 100, 100
     normalize_arr(np_deg0, [x_size, y_size, z_size])
@@ -101,6 +101,9 @@ if (len(sys.argv) != 7):
 ip, f1, f2, f3, f4, fout = sys.argv[1:]
 coords = load_mappings(f1, f2, f3, f4)
 
+# load up a second array populated with "best guesses"
+guessy_coords = load_mappings(f1, f2, f3, f4, 0)
+
 xmas_tree = tree.tree(host = ip)
 
 print(coords)
@@ -123,9 +126,13 @@ for i, coord in enumerate(coords):
                     print("\t", np.around(coords[curr_pixel_ind], 4), "(red)")
                     debug_pixels[curr_pixel_ind] = [255, 0, 0]
             xmas_tree.write_pixels(debug_pixels)
-            print("Enter best guess for the current axis", j, ":")
+            print("Opencv's best guess is:", np.around(guessy_coords[i], 4))
+            print("Enter best guess for the current axis", j, "or press enter to use best guess:")
             guess = input()
-            coords[i][j] = guess
+            if guess:
+                coords[i][j] = guess
+            else:
+                coords[i][j] = guessy_coords[i][j]
 
 with open(fout, "w") as f:
     f.write(str(coords).replace("[[", "").replace("]]", "").replace("[ ", "").replace("]", ""))
