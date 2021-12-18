@@ -52,8 +52,10 @@ if __name__ == "__main__":
     np.set_printoptions(threshold=sys.maxsize)
     time.sleep(0.5)
 
+    axis = 0
     while 1:
-        # rotate_sequence(xmas_tree)
+        if axis == 3:
+            axis = 0
+        rotate_sequence(xmas_tree)
         scroll_sequence(xmas_tree, axis = 0)
-        scroll_sequence(xmas_tree, axis = 1)
-        scroll_sequence(xmas_tree, axis = 2)
+        axis += 1

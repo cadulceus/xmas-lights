@@ -159,9 +159,17 @@ class tree:
         
         return both_known.astype(int)
 
+    def load_mappings(self, path = "mapping.txt"):
+        with open(path, "r") as f:
+            raw_str = f.read().replace("[", "").replace("]", "").split('\n')
+        # its a bit ugly but we need to replace multiple spaces with single space
+        self.pixel_coords = np.array([[float(num) for num in list(filter(None, line.split(' ')))] for line in raw_str])
+
+
+
     # this function only supports readings from 0, 90, 180, and 270 degrees because
     # anything more than 4 sides is too much math for me
-    def load_mappings(self):
+    def load_mappings_old(self):
         """
         Load in 4 mapping files that contain x, y, and magnitude CSVs that tree-mapper.py outputs.
         Each file is expected to be a 90 degree increment counter-clockwise rotation from the 'front'.
