@@ -41,7 +41,7 @@ def main():
     xmas_tree = tree.tree(host_ip, 4141)
 
     readings = []
-    pixels = [[0,0,0]] * num_lights
+    pixels = [[0,0,0]] * int(num_lights)
     for i in range(len(pixels)):
         pixels[i - 1] = [0, 0, 0]
         pixels[i] = [255, 255, 255]
