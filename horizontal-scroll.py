@@ -57,5 +57,5 @@ if __name__ == "__main__":
         if axis == 3:
             axis = 0
         rotate_sequence(xmas_tree)
-        scroll_sequence(xmas_tree, axis = 0)
+        scroll_sequence(xmas_tree, axis = axis)
         axis += 1
