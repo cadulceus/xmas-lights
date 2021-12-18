@@ -106,6 +106,7 @@ guessy_coords = load_mappings(f1, f2, f3, f4, 0)
 
 xmas_tree = tree.tree(host = ip)
 
+
 print(coords)
 nans = np.isnan(coords)
 for i, coord in enumerate(coords):
@@ -133,6 +134,13 @@ for i, coord in enumerate(coords):
                 coords[i][j] = guess
             else:
                 coords[i][j] = guessy_coords[i][j]
+            with open("backup.txt", "a") as backup:
+                backup.write(str(guess) + '\n')
 
+#this string truncating thing is so stupid
+np.set_printoptions(threshold=999999, suppress=True)
 with open(fout, "w") as f:
-    f.write(str(coords).replace("[[", "").replace("]]", "").replace("[ ", "").replace("]", ""))
+    f.write(str(np.around(coords, 8)).replace("[[", "").replace("]]", "").replace("[ ", "").replace("]", ""))
+
+with open("backup.txt", "a") as backup:
+    backup.write("===END OF BACKUP===\n")
