@@ -34,14 +34,14 @@ if __name__ == "__main__":
     while 1:
         origin = [randint(0, xmas_tree.x_size), randint(0, xmas_tree.y_size), randint(0, xmas_tree.z_size)]
         start_color = xmas_tree.colors[xmas_tree.index_of_nearest(origin)]
-        color_rotation_steps = randint(12, 25)
+        color_rotation_steps = randint(8, 16)
         ripples = []
-        for steps in range(color_rotation_steps):
-            ripples.append(Ripple(origin, xmas_tree, rotate_color(start_color, times = steps, scale = 20)))
         ripple_queue = []
+        for steps in range(color_rotation_steps):
+            ripples.append(Ripple(origin, xmas_tree, rotate_color(start_color, times = steps, scale = 30)))
         ripple_queue.append(ripples.pop(0))
         ripple_spacing = 1
-        timer = 0
+        timer = ripple_spacing
         while ripple_queue:
             if timer == 0:
                 if ripples:
