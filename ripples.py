@@ -43,7 +43,6 @@ if __name__ == "__main__":
         ripple_spacing = 1
         timer = 0
         while ripple_queue:
-            for ripple in ripple_queue:
             if timer == 0:
                 if ripples:
                     ripple_queue.append(ripples.pop(0))
