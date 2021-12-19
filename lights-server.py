@@ -23,7 +23,7 @@ def main():
     if len(sys.argv) != 2:
         print("Usage: sudo python3 lights-server.py <pixel_count>")
         return
-    pixel_count = sys.argv[1]
+    pixel_count = int(sys.argv[1])
     lights = neopixel.NeoPixel(board.D21, pixel_count, auto_write = False, pixel_order = 'RGB')
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
