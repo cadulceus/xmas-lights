@@ -43,9 +43,7 @@ if __name__ == "__main__":
         ripple_spacing = 1
         timer = 0
         while ripple_queue:
-            print("Processing", len(ripple_queue), "ripples:")
             for ripple in ripple_queue:
-                print("\t", ripple.color, ", ", ripple.progress)
             if timer == 0:
                 if ripples:
                     ripple_queue.append(ripples.pop(0))
