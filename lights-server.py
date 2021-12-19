@@ -15,9 +15,9 @@ def recv_full_object(sock):
             pass
 
 def update_pixels(lights, new_pixels):
-    for i in range(min(len(pixels), len(new_pixels))):
-        pixels[i] = new_pixels[i]
-    pixels.show()
+    for i in range(min(len(lights), len(new_pixels))):
+        lights[i] = new_pixels[i]
+    lights.show()
 
 def main():
     if len(sys.argv) != 2:
