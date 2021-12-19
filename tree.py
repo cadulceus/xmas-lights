@@ -3,18 +3,21 @@ from pickle import dumps
 import numpy as np
 
 class tree:
-    def __init__(self, host = '127.0.0.1', port = 4141, x_size = 100, y_size = 100, z_size = 100):
+    def __init__(self, host = '127.0.0.1', port = 4141, x_size = 100, y_size = 100, z_size = 100, colors = [[0, 0, 0]] * 400):
         self.HOST = host
         self.PORT = port
         self.x_size = x_size
         self.y_size = y_size
         self.z_size = z_size
         self.midpoint = [x_size / 2, y_size / 2, z_size / 2]
+        self.colors = colors
 
-    def write_pixels(self, pixels):
+    def write_pixels(self, pixels = None):
+        if pixels:
+            self.colors = pixels
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
-            s.send(dumps(pixels))
+            s.send(dumps(self.colors))
             s.close()
     
     def nan_to_neg(self, arr):
@@ -55,12 +58,25 @@ class tree:
             np_readings[np_readings == -1] = np.nan
             return np_readings
 
-    def find_nearest(self, point):
+    def all_pixels_within(self, point, distance):
+        """
+        returns a mask for pixel_coords that is true for all pixels within a given distance to a point
+        """
+        idx = np.abs(self.pixel_coords - point)
+        return [math.dist(point, pixel) < distance for pixel in self.pixel_coords]
+
+    def distances_to_point(self, point):
+        """
+        returns the euclidean distance to every pixel in tree from a given point
+        """
+        return [math.dist(point, pixel) for pixel in self.pixel_coords]
+
+    def index_of_nearest(self, point):
         """
         returns the index of the nearest pixel in 3d space to a given point
         """
         idx = np.abs(self.pixel_coords - point)
-        distances = [find_distance(point, tree_point) for pixel in self.pixel_coords]
+        distances = self.distances_to_point(point)
         return distances.index(min(distances))
 
     def yaw_90_deg(self, arr, times = 1, origin = [0, 0, 0]):

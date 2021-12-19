@@ -2,8 +2,8 @@ import time, sys
 import tree
 
 PIXELS_COUNT = 400
-INIT_COLOR_SCALE = 10
-STEP_COLOR_SCALE = 15
+INIT_COLOR_SCALE = 5
+STEP_COLOR_SCALE = 12
 PORT = 4141
 
 if len(sys.argv) == 2:
@@ -15,19 +15,19 @@ else:
     sys.exit(0)
 
 # assumes that at least one color is 0 and r + g + b <= 255
-def rotate_color(grb, count=1, scale=STEP_COLOR_SCALE):
-        rotated_grb = [grb[0], grb[1], grb[2]]
+def rotate_color(rgb, times=1, scale=STEP_COLOR_SCALE):
+        rotated_rgb = [rgb[0], rgb[1], rgb[2]]
 
         # I'm sure there's a way to compute this in constant time but I'm not about to implement that
-        for i in range(count):
-            if rotated_grb.count(0) == 2:
-                i = next(rotated_grb.index(x) for x in rotated_grb if x != 0)
+        for i in range(times):
+            if rotated_rgb.count(0) == 2:
+                i = next(rotated_rgb.index(x) for x in rotated_rgb if x != 0)
             else:
-                i = (rotated_grb.index(0) + 1) % 3
+                i = (rotated_rgb.index(0) + 1) % 3
 
-            rotated_grb[i] = max(0, rotated_grb[i] - scale)
-            rotated_grb[(i + 1) % 3] = min(255, rotated_grb[(i + 1) % 3] + scale)
-        return rotated_grb
+            rotated_rgb[i] = max(0, rotated_rgb[i] - scale)
+            rotated_rgb[(i + 1) % 3] = min(255, rotated_rgb[(i + 1) % 3] + scale)
+        return rotated_rgb
 
 def init_pixels():
     pixels = [[255,0,0]]*PIXELS_COUNT
