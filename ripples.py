@@ -55,4 +55,4 @@ if __name__ == "__main__":
                 if ripple_queue[i].progress >= 1:
                     ripple_queue.remove(ripple_queue[i])
             xmas_tree.write_pixels()
-            time.sleep(.05)
+            time.sleep(.03)
