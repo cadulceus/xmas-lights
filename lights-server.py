@@ -26,15 +26,15 @@ def main():
     pixel_count = sys.argv[1]
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
-        try:
-            while 1:
+        while 1:
+            try:
                 s.listen()
                 conn, addr = s.accept()
                 with conn:
                     new_pixels = recv_full_object(conn)
                     update_pixels(new_pixels)
-        except Exception as e:
-            print("Exception occurred, continuing anyways: ", str(e))
-            continue
+            except Exception as e:
+                print("Exception occurred, continuing anyways: ", str(e))
+                continue
 
 main()
