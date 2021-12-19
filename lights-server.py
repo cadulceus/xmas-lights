@@ -1,9 +1,9 @@
 import socket, board, neopixel, sys
 from pickle import loads, dumps
+import sys
 
 HOST = ''
 PORT = 4141
-pixels = neopixel.NeoPixel(board.D21, PIXELS_COUNT, auto_write = False, pixel_order = 'RGB')
 
 def recv_full_object(sock):
     pickled_arr = b''
@@ -14,7 +14,7 @@ def recv_full_object(sock):
         except:
             pass
 
-def update_pixels(new_pixels):
+def update_pixels(lights, new_pixels):
     for i in range(min(len(pixels), len(new_pixels))):
         pixels[i] = new_pixels[i]
     pixels.show()
@@ -24,6 +24,7 @@ def main():
         print("Usage: sudo python3 lights-server.py <pixel_count>")
         return
     pixel_count = sys.argv[1]
+    lights = neopixel.NeoPixel(board.D21, pixel_count, auto_write = False, pixel_order = 'RGB')
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         while 1:
@@ -32,7 +33,7 @@ def main():
                 conn, addr = s.accept()
                 with conn:
                     new_pixels = recv_full_object(conn)
-                    update_pixels(new_pixels)
+                    update_pixels(lights, new_pixels)
             except Exception as e:
                 print("Exception occurred, continuing anyways: ", str(e))
                 continue
