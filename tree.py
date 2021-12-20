@@ -17,7 +17,7 @@ class tree:
             self.colors = pixels
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
-            s.send(dumps(self.colors))
+            s.send(dumps(pixels))
             s.close()
     
     def nan_to_neg(self, arr):

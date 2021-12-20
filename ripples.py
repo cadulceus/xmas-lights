@@ -51,8 +51,9 @@ if __name__ == "__main__":
             for i in range(len(ripple_queue)):
                 if i >= len(ripple_queue):
                     break
-                ripple_queue[i].progress = ripple_queue[i].progress + 0.02
                 if ripple_queue[i].progress >= 1:
                     ripple_queue.remove(ripple_queue[i])
+                    break
+                ripple_queue[i].progress = ripple_queue[i].progress + 0.02
             xmas_tree.write_pixels()
             time.sleep(.03)
