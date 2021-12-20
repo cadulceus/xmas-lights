@@ -12,7 +12,7 @@ class tree:
         self.midpoint = [x_size / 2, y_size / 2, z_size / 2]
         self.colors = colors
 
-    def write_pixels(self, pixels = None):
+    def write_pixels(self, pixels = []):
         for i in range(min(len(pixels), len(self.colors))):
             self.colors[i] = pixels[i]
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
