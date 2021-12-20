@@ -13,11 +13,11 @@ class tree:
         self.colors = colors
 
     def write_pixels(self, pixels = None):
-        if pixels:
-            self.colors = pixels
+        for i in range(min(len(pixels), len(self.colors))):
+            self.colors[i] = pixels[i]
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.HOST, self.PORT))
-            s.send(dumps(pixels))
+            s.send(dumps(self.colors))
             s.close()
     
     def nan_to_neg(self, arr):
