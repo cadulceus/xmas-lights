@@ -15,8 +15,10 @@ else:
     sys.exit(0)
 
 # assumes that at least one color is 0 and r + g + b <= 255
-def rotate_color(rgb, times=1, scale=STEP_COLOR_SCALE):
+def rotate_color(rgb, times=1, scale=STEP_COLOR_SCALE, invert = False):
         rotated_rgb = [rgb[0], rgb[1], rgb[2]]
+        if invert:
+            rotated_rgb = rotated_rgb[::-1]
 
         # I'm sure there's a way to compute this in constant time but I'm not about to implement that
         for i in range(times):
@@ -27,6 +29,8 @@ def rotate_color(rgb, times=1, scale=STEP_COLOR_SCALE):
 
             rotated_rgb[i] = max(0, rotated_rgb[i] - scale)
             rotated_rgb[(i + 1) % 3] = min(255, rotated_rgb[(i + 1) % 3] + scale)
+        if invert:
+            rotated_rgb = rotated_rgb[::-1]
         return rotated_rgb
 
 def init_pixels():

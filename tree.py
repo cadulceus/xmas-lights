@@ -181,6 +181,9 @@ class tree:
         # its a bit ugly but we need to replace multiple spaces with single space
         self.pixel_coords = np.array([[float(num) for num in list(filter(None, line.split(' ')))] for line in raw_str])
 
+        #more hackiness: "height" is inverted on cameras and its annoying
+        self.pixel_coords[:, 1] = self.y_size - self.pixel_coords[:, 1]
+
 
 
     # this function only supports readings from 0, 90, 180, and 270 degrees because
