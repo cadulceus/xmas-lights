@@ -34,6 +34,13 @@ I've found that the raspberry pi does not handle the consistent ~50kb/s coming f
 This project was based heavily on Matt Parker/Stand Up Math's 3d christmas tree from last year https://www.youtube.com/watch?v=TvlpIojusBE
 
 Here is some footage of some of these scripts running:
-![horizontalscroll.py](https://i.imgur.com/IQDG38c.mp4)
-![ripples.py](https://i.imgur.com/CXOXC1m.mp4)
-![fireplace.py](https://i.imgur.com/Mz7RM6G.mp4)
+![horizontalscroll.py](https://user-images.githubusercontent.com/9575727/148138214-86fa2ad0-2748-418f-9b72-1fd12d365668.mp4)
+![ripples.py](https://user-images.githubusercontent.com/9575727/148138204-52e120d8-69f2-476f-9142-8cbef65eea16.mp4)
+![fireplace.py](https://user-images.githubusercontent.com/9575727/148138188-c347aad8-c255-4ed8-a0f3-76d2a0b8f6b4.mp4)
+
+
+
+
+
+
+
