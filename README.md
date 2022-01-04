@@ -32,3 +32,6 @@ Once you have 4 reading files, replace the mapping files in the repo and call tr
 I've found that the raspberry pi does not handle the consistent ~50kb/s coming from light pattern scripts over wifi, so for the most stable lightshow just clone this whole repo ono the pi and have the lighting scripts connect to localhost. The wifi functionality is still useful for the tree mapping script and for testing new scripts though.
 
 This project was based heavily on Matt Parker/Stand Up Math's 3d christmas tree from last year https://www.youtube.com/watch?v=TvlpIojusBE
+
+Here is some footage of some of these scripts running:
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/p1ajV8s" data-context="false" ><a href="//imgur.com/a/p1ajV8s"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
